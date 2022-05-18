@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+
+  </style>
+</head>
+<body>
+  <!-- *버튼을 클릭한다/1번 동그라미가 올라간다/버튼을 또 클릭한다/2번 동그라미가 내려간다 -->
+  <div id="root">
+    <div></div>
+    <button>click</button>
+  </div>
+  <script>
+    const root = document.querySelector('#root');
+    const clickBtn = document.querySelector('button');
+    console.log(root);
+    root.setAttribute('style',`width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;`);
+    root.children[0].setAttribute('style',`display: flex; align-items: center; justify-content: center;`);
+    
+    let num = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // ?for()을 forEach로 바꿀 수도 있지 않을까? 
+    // 적용할 부모태그가 배열이 아니므로 배열 메서드를 사용할 수는 없는 건가?
+    for(let i = 0; i < 9; i++){
+      const numberItem = document.createElement('section');
+      numberItem.textContent = num[i];
+      // numberItem.style.position = 'relative';
+      numberItem.setAttribute('style',`position: relative; width: 3vw; height: 3vw; background: #c4c4c4; border-radius: 50px; text-align: center; padding: 10px; `);
+      root.children[0].append(numberItem);
+      console.dir(numberItem);
+    }
+    // array.from
+    const rootChild = root.children[0].children;
+    const numberBtn = Array.from(rootChild);
+    console.log(numberBtn);
+    // ?dataset
+    //버튼을 클릭한다
+    // 그런데 한꺼번에 홀짝마다 올라갔다 내려갔다 할 것이 아니면 카운트해주는 변수를 넣는 것이 낫지 않을까 
+    //1번 동그라미가 올라간다 => 홀수 => 인덱스는 0번부터니까 홀수를 짝수로 판별하는 식을 넣어주고
+    //버튼을 또 클릭한다 => 버튼 핸들러 변수를 달아서 카운트 변수를 만들어 주는 것이 낫지 않을까
+    //2번 동그라미가 내려간다 => 짝수 => 이 부분을 홀수로 판별하는 식을 넣어주면 되지 않을까?
+    let clickValue = 0;
+    clickBtn.addEventListener('click', function(){
+      // console.log('click');
+      // ?하나씩 버튼마다 어떻게 조절을 해야 인덱스와 버튼이 동일하게 동작할까?
+      // !dataset으로 적용되는 것만 적용시켜야 하는데
+      console.log(numberBtn);
+      // !얜 어차피 배열이니까 엘리먼트만 비교해도 된다 인덱스가 아니라
+      numberBtn.forEach((element,index) => {
+        if(clickValue === index){
+          // ?filter(), map()
+          // ?map()으로 인덱스
+          // ?filter()를 if() 대신 사용하면 될 것 같은데
+          if(index%2 === 0){
+            console.log('짝수번의 인덱스 입니다 === 홀수');
+            console.log(numberBtn[index]);
+            // numberBtn[index].style.top = '-10vh';
+            numberBtn[index].animate(moveUp, moveTime);
+          } else{
+            console.log('홀수번의 인덱스 입니다 === 짝수');
+            console.log(numberBtn[index]);
+            // numberBtn[index].style.top = '10vh';
+            numberBtn[index].animate(moveDown, moveTime);
+          }
+        }
+      });
+      clickValue++;
+    });
+    
+    // animate(keyframes, options)
+    // keyframes 부분에 들어갈 부분
+    // 위로 올라갈 부분 => 짝수
+    const moveUp = [
+      // !요소 자체에 스타일로 포지션 값을 넣어줘야 한다
+      // {position: 'relative'},
+      {top: '-10vh'}
+    ];
+    // 아래로 내려갈 부분 => 홀수
+    const moveDown = [
+      // {position: 'relative'},
+      {top: '10vh'}
+    ];
+    
+    const moveTime = {
+      // 지속시간 => ms 단위
+      duration: 500
+      // iterations => 반복을 해주는 것
+    }
+
+  </script>
+</body>
+</html>
